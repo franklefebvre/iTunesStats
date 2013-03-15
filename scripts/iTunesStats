@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import argparse
+import os
+from datetime import datetime
+import ConfigParser
+
+import its_database
+import its_download
+import its_import
+import its_report
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--download', type=str, action='append', dest='download_actions', metavar='CONFIG_FILE', help='download daily summary from iTunes Connect into archive file')
+parser.add_argument('--download-import', type=str, action='append', dest='download_import_actions', metavar='CONFIG_FILE', help='download daily summary from iTunes Connect into archive file and database')
+parser.add_argument('--date', type=str, action='store', dest='report_date', metavar='REPORT_DATE', help='download report for the specified date (by default: yesterday)')
+parser.add_argument('--import', type=str, action='append', dest='import_actions', nargs=2, metavar=('CONFIG_FILE', 'PATH'), help='import archive file(s) into database')
+parser.add_argument('--report', type=str, action='append', dest='report_actions', metavar='CONFIG_FILE', help='generate html report')
+parser.add_argument('--export', type=str, action='append', dest='export_actions', metavar='CONFIG_FILE', help='export database contents as delimited text file')
+args = parser.parse_args()
+
+if args.report_date:
+	report_date = datetime.strptime(args.report_date, '%Y-%m-%d')
+else:
+	report_date = None
+
+if args.download_actions:
+	for config_path in args.download_actions:
+		download_manager = its_download.ReportDownloadManager(config_path)
+		if report_date:
+			download_manager.get_reports_for_date(report_date)
+		else:
+			download_manager.get_reports()
+
+if args.import_actions:
+	for (config_path, archive_path) in args.import_actions:
+		parser = ConfigParser.SafeConfigParser()
+		parser.read(config_path)
+		database_path = parser.get('data', 'database')
+		its_import.import_from_filesystem(database_path, archive_path)
+
+if args.download_import_actions:
+	for config_path in args.download_import_actions:
+		download_manager = its_download.ReportDownloadManager(config_path)
+		if report_date:
+			reports = download_manager.get_reports_for_date(report_date)
+		else:
+			reports = download_manager.get_reports()
+		if reports.has_key('daily_sales'):
+			archive_name = reports['daily_sales']
+			parser = ConfigParser.SafeConfigParser()
+			parser.read(config_path)
+			database_path = parser.get('data', 'database')
+			archive_dir = parser.get('data', 'archive')
+			archive_path = os.path.join(archive_dir, archive_name)
+			its_import.import_from_filesystem(database_path, archive_path)
+
+if args.report_actions:
+	for config_path in args.report_actions:
+		its_report.generate_report(config_path)
+
+if args.export_actions:
+	for config_path in args.export_actions:
+		print config_path
+

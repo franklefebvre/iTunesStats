@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8" />
+	<title>iTunesStats</title>
+	<script type="text/javascript" src="Flotr2/flotr2.min.js"></script>
+	<script type="text/javascript" src="charts.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
+</head>
+<body>
+	% for product in products:
+	<p>
+		<details open>
+			<summary class="gradient-background">${product[1]}</summary>
+			<div class="container">
+				<div id="piechart_${product[0]}" class="country"></div>
+				<script type="text/javascript">
+				displayPieChart("piechart_${product[0]}", "country-${product[0]}.json");
+				</script>
+			</div>
+			<div class="container">
+				<div id="bargraph_${product[0]}" class="date"></div>
+				<script type="text/javascript">
+				displayBarGraph("bargraph_${product[0]}", "date-${product[0]}.json");
+				</script>
+			</div>
+			<div class="container">
+				<div id="version_${product[0]}" class="version"></div>
+				<script type="text/javascript">
+				displayPieChart("version_${product[0]}", "version-${product[0]}.json");
+				</script>
+			</div>
+		</details>
+	</p>
+	% endfor
+</body>
+</html>
