@@ -54,7 +54,7 @@ Examples
 Simple case: one developer account, one database, one report
 ------------------------------------------------------------
 
- - /Library/iTunesSales/simple/simple.config
+__/Library/iTunesSales/simple/simple.config__
 
 	[iTunes]
 	username = account@example.com
@@ -70,14 +70,14 @@ Simple case: one developer account, one database, one report
 	templates = /Library/iTunesSales/templates
 	output = /Library/WebServer/Documents/simple-report
 
- - Daily script:
+__Daily script:__
 
 	iTunesStats --download-import /Library/iTunesSales/simple/simple.config --report /Library/iTunesSales/simple/simple.config
 
 Merging sales from two developer accounts into a single report
 --------------------------------------------------------------
 
- - /Library/iTunesSales/merge/acct1.config
+__/Library/iTunesSales/merge/acct1.config__
 
 	[iTunes]
 	username = account1@example.com
@@ -89,7 +89,7 @@ Merging sales from two developer accounts into a single report
 	history = /Library/iTunesSales/merge/history
 	database = /Library/iTunesSales/merge/sales.db
 
- - /Library/iTunesSales/merge/acct2.config
+__/Library/iTunesSales/merge/acct2.config__
 
 	[iTunes]
 	username = account2@example.com
@@ -101,7 +101,7 @@ Merging sales from two developer accounts into a single report
 	history = /Library/iTunesSales/merge/history
 	database = /Library/iTunesSales/merge/sales.db
 
- - /Library/iTunesSales/merge/report.config
+__/Library/iTunesSales/merge/report.config__
 
 	[data]
 	database = /Library/iTunesSales/merge/sales.db
@@ -110,7 +110,7 @@ Merging sales from two developer accounts into a single report
 	templates = /Library/iTunesSales/templates
 	output = /Library/WebServer/Documents/merge-report
 
- - Daily script:
+__Daily script:__
 
 	iTunesStats --download-import /Library/iTunesSales/merge/acct1.config --download-import /Library/iTunesSales/merge/acct2.config --report /Library/iTunesSales/merge/report.config
 
