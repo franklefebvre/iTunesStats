@@ -22,7 +22,7 @@ class DownloadResult:
 		self._success = filename or errormsg == 'There are no reports available to download for this selection.'
 		if self._success or errormsg == 'Error :Your Apple ID or password was entered incorrectly.':
 			self._retry = False
-		elif errormsg == None or errormsg == 'Daily reports are available only for past 14 days, please enter a date within past 14 days.':
+		elif errormsg == None or errormsg.startswith('Daily reports are available only for past '):
 			self._retry = True
 		else:
 			self._retry = False
