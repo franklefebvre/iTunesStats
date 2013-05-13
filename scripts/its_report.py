@@ -5,11 +5,17 @@ import glob
 import os
 import sys
 import codecs
+from datetime import datetime
 from mako.template import Template
 import ConfigParser
 
 import its_database
 import its_format
+
+
+def days_from_epoch(date_str):
+	d = datetime.strptime(date_str[:10], "%Y-%m-%d")
+	return d.toordinal() - datetime(1970,1,1).toordinal()
 
 
 class SalesReporter:
@@ -30,7 +36,7 @@ class SalesReporter:
 	def generate_product_sales_by_date_json(self, product_id):
 		rows = self.database.select_product_sales_by_date(product_id)
 		# row[0] = date, row[1] = sales
-		row_json_strings = ['[%d, %s]' % (x, rows[x][1]) for x in range(len(rows))]
+		row_json_strings = ['[%d, %s]' % (days_from_epoch(rows[x][0]), rows[x][1]) for x in range(len(rows))]
 		array_json_string= '[' + ', '.join(row_json_strings) + ']'
 		return array_json_string
 		

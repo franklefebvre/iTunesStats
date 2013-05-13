@@ -34,8 +34,9 @@ displayBarGraph = function(containerName, jsonPath) {
 			graphData = eval(xhr.responseText);
 			var container = document.getElementById(containerName), graph;
 			graph = Flotr.draw(container, [graphData],
-				{bars : {show : true, horizontal: false, shadowSize : 0, barWidth : 1},
-				mouse : {track : true, relative : true},
+				{bars: {show : true, horizontal: false, shadowSize : 0, barWidth : 1},
+				mouse: {track : true, relative : true},
+				xaxis: {mode: "time", timeUnit:"day", timeFormat: "%d/%m/%y"},
 				yaxis: {min: 0}
 			});
 		};
