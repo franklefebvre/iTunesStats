@@ -32,7 +32,8 @@ class SalesFormatter:
 			update = (row[1] in ['7', '7F', '7T', 'F7'])
 			count = row[2]
 			if update:
-				result_dict[previous_version] -= count
+				if result_dict.has_key(previous_version):
+					result_dict[previous_version] -= count
 				result_dict[version] = count
 			else:
 				if result_dict.has_key(version):
