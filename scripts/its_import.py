@@ -32,7 +32,8 @@ class DailySummaryFileReader:
 			"Promo Code",
 			"Parent Identifier",
 			"Subscription",
-			"Period"
+			"Period",
+			"Category"
 		]
 		self.daily_summary_fields = [
 			"provider",
@@ -54,7 +55,8 @@ class DailySummaryFileReader:
 			"promo_code",
 			"iap_parent_sku",
 			"subscription_type",
-			"subscription_period"
+			"subscription_period",
+			"category"
 		]
 	
 	def validate_header(self, line):
