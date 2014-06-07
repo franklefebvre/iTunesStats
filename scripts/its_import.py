@@ -59,7 +59,9 @@ class DailySummaryFileReader:
 	
 	def validate_header(self, line):
 		elements = line.strip().split('\t')
-		return elements == self.daily_summary_headers
+		if len(elements) > len(self.daily_summary_headers):
+			print 'Warning: header contains more columns than expected.'
+		return elements[:len(self.daily_summary_headers)] == self.daily_summary_headers
 	
 	def decode_row(self, line):
 		elements = line.strip().split('\t') + [None]*len(self.daily_summary_fields)
