@@ -48,8 +48,19 @@ class SalesReporter:
 		row_json_strings = ['{data: [[0, %s]], label: "%s"}' % (row[1], row[0]) for row in rows]
 		array_json_string = '[' + ', '.join(row_json_strings) + ']'
 		return array_json_string
+	
+	def generate_product_info_dict(self, product_id):
+		info_dict = {}
+		rows = self.database.select_product_sales_by_date(product_id)
+		# row[0] = date, row[1] = sales
+		if len(rows):
+			info_dict['first_date'] = rows[0][0][:10]
+			info_dict['latest_date'] = rows[-1][0][:10]
+			info_dict['latest_day_sales'] = rows[-1][1]
+			info_dict['total_sales'] = sum([v for [k,v] in rows])
+		return info_dict
 		
-	def generate_root_files(self, products):
+	def generate_root_files(self, products, product_info):
 		files = glob.glob(os.path.join(self.template_dir, 'template-*'))
 		for template_path in files:
 			template_name = os.path.basename(template_path)
@@ -58,7 +69,7 @@ class SalesReporter:
 			output_path = os.path.join(self.output_dir, output_name)
 			f = codecs.open(output_path, 'w', 'utf-8')
 			template = Template(filename=template_path)
-			f.write(template.render_unicode(products=products))
+			f.write(template.render_unicode(products=products, product_info=product_info))
 			f.close()
 	
 	def write_json_file(self, prefix, product_id, json_string):
@@ -69,6 +80,7 @@ class SalesReporter:
 		
 	def generate_all_files(self):
 		products = self.database.select_all_products()
+		product_info = {}
 		for product in products:
 			product_id = product[0]
 			json_string = self.generate_product_sales_by_date_json(product_id)
@@ -77,7 +89,9 @@ class SalesReporter:
 			self.write_json_file('country', product_id, json_string)
 			json_string = self.generate_product_sales_by_version_json(product_id)
 			self.write_json_file('version', product_id, json_string)
-		self.generate_root_files(products)
+			info_dict = self.generate_product_info_dict(product_id)
+			product_info[product_id] = info_dict
+		self.generate_root_files(products, product_info)
 
 
 def generate_report(config_path):
